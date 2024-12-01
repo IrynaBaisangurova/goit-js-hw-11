@@ -25,7 +25,7 @@ function searchPictures(event) {
     return iziToast.warning({
       title: "Caution",
       message: "Please complete the field!",
-      position: "topRight",
+      position: "bottomRight",
     });
   }
   getPictures(inputValue)
@@ -36,7 +36,7 @@ function searchPictures(event) {
         iziToast.error({
           title: 'Error',
           message: 'Sorry, there are no images matching your search query. Please try again!',
-          position: 'topRight',
+          position: 'bottomRight',
         });
       }
 
@@ -52,7 +52,12 @@ function searchPictures(event) {
     })
     .catch((error) => {
       loader.style.display = 'none';
-      console.error("Error fetching images:", error);
+      console.error("Error", error);
+      iziToast.error({
+        title: 'Error',
+        message: 'Sorry, something went wrong. This is an error!',
+        position: 'bottomRight',
+      });
     })
     .finally(() =>  loader.style.display = 'none');
     input.value = "";

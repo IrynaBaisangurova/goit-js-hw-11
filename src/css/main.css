@@ -10,6 +10,7 @@
   outline: transparent;
   background: #EDF4FA;
   padding: 10px 16px;
+  margin-bottom: 8px;
 }
 
 .input-search:focus {
