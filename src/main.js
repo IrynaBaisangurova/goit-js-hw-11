@@ -10,6 +10,7 @@ import {createMarkup} from "./js/render-functions";
 const form = document.querySelector('.form-search');
 const images = document.querySelector('.gallery');
 const loader = document.querySelector('.loader');
+const input = document.querySelector('.input-search');
 
 loader.style.display = 'none';
 form.addEventListener('submit', searchPictures);
@@ -18,9 +19,15 @@ function searchPictures(event) {
   event.preventDefault();
   images.innerHTML = '';
   loader.style.display = 'block';
-
-  const inputValue = event.target.elements.search.value;
-
+  const inputValue = input.value.trim()
+  if (inputValue === "") {
+    loader.style.display = 'none';
+    return iziToast.warning({
+      title: "Caution",
+      message: "Please complete the field!",
+      position: "topRight",
+    });
+  }
   getPictures(inputValue)
     .then(data => {
       loader.style.display = 'none';
@@ -29,13 +36,13 @@ function searchPictures(event) {
         iziToast.error({
           title: 'Error',
           message: 'Sorry, there are no images matching your search query. Please try again!',
+          position: 'topRight',
         });
       }
 
       images.innerHTML = ("beforeend", createMarkup(data.hits));
 
       const refreshPage = new SimpleLightbox('.gallery a', {
-        captions: true,
         captionsData: 'alt',
         captionDelay: 250,
       });
@@ -45,8 +52,11 @@ function searchPictures(event) {
     })
     .catch((error) => {
       loader.style.display = 'none';
-      console.log(error);
-    });
+      console.error("Error fetching images:", error);
+    })
+    .finally(() =>  loader.style.display = 'none');
+    input.value = "";
+
 }
 
 
